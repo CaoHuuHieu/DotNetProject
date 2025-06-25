@@ -1,6 +1,6 @@
 using JobBoard.Application.DTOs;
 
-namespace JobBoard.Application.Interfaces;
+namespace JobBoard.Application.Interfaces.Services;
 
 public interface ICompanyService
 {

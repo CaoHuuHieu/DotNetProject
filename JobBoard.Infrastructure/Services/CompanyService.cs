@@ -1,8 +1,9 @@
 using JobBoard.Application.DTOs;
-using JobBoard.Application.Interfaces;
+using JobBoard.Application.Interfaces.Services;
+using JobBoard.Application.Interfaces.Repositories;
 using JobBoard.Domain.Entity;
 
-namespace JobBoard.Application.Services;
+namespace JobBoard.Infrastructure.Services;
 
 public class CompanyService : ICompanyService
 {

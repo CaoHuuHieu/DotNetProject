@@ -1,6 +1,6 @@
 using JobBoard.Domain.Entity;
 
-namespace JobBoard.Application.Interfaces;
+namespace JobBoard.Application.Interfaces.Repositories;
 
 public interface ICompanyRepository
 {

@@ -1,4 +1,4 @@
-using JobBoard.Application.Interfaces;
+using JobBoard.Application.Interfaces.Repositories;
 using JobBoard.Domain.Entity;
 using JobBoard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

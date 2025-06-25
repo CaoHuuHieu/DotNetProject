@@ -1,0 +1,22 @@
+# Build folders
+*/bin/
+*/obj/
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Publish
+*.publish/
+
+# User secrets
+secrets.json
