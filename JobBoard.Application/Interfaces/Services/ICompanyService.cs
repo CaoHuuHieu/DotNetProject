@@ -4,7 +4,7 @@ namespace JobBoard.Application.Interfaces.Services;
 
 public interface ICompanyService
 {
-    Task<IEnumerable<CompanyDto>> GetAllAsync();
+    Task<IEnumerable<CompanyDto>> GetAllAsync(CompanyFilterDto request);
     Task<CompanyDto?> GetByIdAsync(Guid id);
     Task<CompanyDto> CreateAsync(CreateCompanyDto dto);
     Task<bool> UpdateAsync(Guid id, UpdateCompanyDto dto);

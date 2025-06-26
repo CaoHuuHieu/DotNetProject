@@ -2,6 +2,7 @@ using JobBoard.Application.Interfaces.Repositories;
 using JobBoard.Domain.Entity;
 using JobBoard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using JobBoard.Application.DTOs;
 
 namespace JobBoard.Infrastructure.Repositories;
 
@@ -14,7 +15,7 @@ public class CompanyRepository : ICompanyRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Company>> GetAllAsync()
+    public async Task<IEnumerable<Company>> GetAllAsync(CompanyFilterDto request)
     {
         return await _context.Companies.ToListAsync();
     }

@@ -58,3 +58,8 @@ public class UpdateCompanyDto
     [StringLength(250, ErrorMessage = "The address must not exceed 250 characters")]
     public string Address { get; set; } = default!;
 }
+
+public class CompanyFilterDto : PageRequestDto
+{
+   
+}

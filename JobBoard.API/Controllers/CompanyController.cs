@@ -18,9 +18,8 @@ public class CompanyController : ControllerBase
 
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies()
+    public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies([FromQuery] CompanyFilterDto request)
     {
-        throw new NotFoundException("Companies not found");
         var companies = await _companyService.GetAllAsync();
         return Ok(companies);
     }

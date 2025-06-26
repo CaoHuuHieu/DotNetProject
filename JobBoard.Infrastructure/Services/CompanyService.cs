@@ -14,9 +14,9 @@ public class CompanyService : ICompanyService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<CompanyDto>> GetAllAsync()
+    public async Task<IEnumerable<CompanyDto>> GetAllAsync(CompanyFilterDto request)
     {
-        var companies = await _repository.GetAllAsync();
+        var companies = await _repository.GetAllAsync(request);
         return companies.Select(MapToDto);
     }
 
