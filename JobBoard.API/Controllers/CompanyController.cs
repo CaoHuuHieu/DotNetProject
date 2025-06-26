@@ -1,7 +1,6 @@
 using JobBoard.Application.DTOs;
 using JobBoard.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using JobBoard.API.Exceptions;
 
 namespace JobBoard.API.Controllers;
 
@@ -16,15 +15,13 @@ public class CompanyController : ControllerBase
         _companyService = companyService;
     }
 
-    
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies([FromQuery] CompanyFilterDto request)
+    public async Task<ActionResult<PageResponse<CompanyDto>>> GetCompanies([FromQuery] CompanyFilterDto request)
     {
-        var companies = await _companyService.GetAllAsync();
+        var companies = await _companyService.GetAllAsync(request);
         return Ok(companies);
     }
 
-   
     [HttpGet("{id}")]
     public async Task<ActionResult<CompanyDto>> GetCompany(Guid id)
     {
@@ -34,14 +31,12 @@ public class CompanyController : ControllerBase
         return Ok(company);
     }
 
- 
     [HttpPost]
     public async Task<ActionResult<CompanyDto>> CreateCompany(CreateCompanyDto dto)
     {
         var created = await _companyService.CreateAsync(dto);
         return CreatedAtAction(nameof(GetCompany), new { id = created.Id }, created);
     }
-
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCompany(Guid id, UpdateCompanyDto dto)
@@ -52,7 +47,6 @@ public class CompanyController : ControllerBase
         return NoContent();
     }
 
-  
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCompany(Guid id)
     {

@@ -3,46 +3,52 @@ using JobBoard.Domain.Entity;
 using JobBoard.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using JobBoard.Application.DTOs;
+using System.Reflection;
 
 namespace JobBoard.Infrastructure.Repositories;
 
-public class CompanyRepository : ICompanyRepository
+public class CompanyRepository(JobBoardDbContext context) : AbstractRepository<Company>, ICompanyRepository
 {
-    private readonly JobBoardDbContext _context;
-
-    public CompanyRepository(JobBoardDbContext context)
+    public async Task<PageResponse<Company>> GetAllAsync(CompanyFilterDto request)
     {
-        _context = context;
-    }
+        var query = context.Companies.AsQueryable();
+        if (!string.IsNullOrEmpty(request.SearchBy) && !string.IsNullOrEmpty(request.SearchValue))
+        {
+            query = request.SearchBy.ToLower() switch
+            {
+                "name"  => query.Where(c => c.Name.Contains(request.SearchValue)),
+                "code"  => query.Where(c => c.Code.Contains(request.SearchValue)),
+                "email" => query.Where(c => c.Email.Contains(request.SearchValue)),
+                _       => query
+            };
+        }
 
-    public async Task<IEnumerable<Company>> GetAllAsync(CompanyFilterDto request)
-    {
-        return await _context.Companies.ToListAsync();
+        return await ToPagedResultAsync(query, request);
     }
 
     public async Task<Company?> GetByIdAsync(Guid id)
     {
-        return await _context.Companies.FindAsync(id);
+        return await context.Companies.FindAsync(id);
     }
 
     public async Task<Company> AddAsync(Company company)
     {
-        _context.Companies.Add(company);
-        await _context.SaveChangesAsync();
+        context.Companies.Add(company);
+        await context.SaveChangesAsync();
         return company;
     }
 
     public async Task<bool> UpdateAsync(Company company)
     {
-        _context.Companies.Update(company);
-        return await _context.SaveChangesAsync() > 0;
+        context.Companies.Update(company);
+        return await context.SaveChangesAsync() > 0;
     }
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var company = await _context.Companies.FindAsync(id);
+        var company = await context.Companies.FindAsync(id);
         if (company == null) return false;
-        _context.Companies.Remove(company);
-        return await _context.SaveChangesAsync() > 0;
+        context.Companies.Remove(company);
+        return await context.SaveChangesAsync() > 0;
     }
 }

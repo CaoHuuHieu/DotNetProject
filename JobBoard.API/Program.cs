@@ -1,7 +1,9 @@
 
+using JobBoard.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using JobBoard.Application.Mappers;
 using JobBoard.Application.Interfaces.Services;
 using JobBoard.Application.Interfaces.Repositories;
 
@@ -21,6 +23,9 @@ builder.Services.AddOpenApiDocument(config =>
 {
     config.Title = "JobBoard API";
 });
+
+//Config Mapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -44,12 +49,11 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 Console.WriteLine($"Current Environment: {app.Environment.EnvironmentName}");
-//if (app.Environment.IsDevelopment())
-//{
-    app.MapOpenApi();
-    app.UseOpenApi();
-    app.UseSwaggerUi();
-//}
+
+app.MapOpenApi();
+app.UseOpenApi();
+app.UseSwaggerUi();
+
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 

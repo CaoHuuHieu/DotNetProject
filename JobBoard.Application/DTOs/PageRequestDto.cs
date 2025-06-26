@@ -4,10 +4,10 @@ namespace JobBoard.Application.DTOs
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-        public string searchBy { get; set; } = string.Empty;
-        public string searchValue { get; set; } = string.Empty;
-        public string sortBy { get; set; } = string.Empty;
-        public string sortDirection { get; set; } = "asc";
+        public string SearchBy { get; set; } = string.Empty;
+        public string SearchValue { get; set; } = string.Empty;
+        public string SortBy { get; set; } = string.Empty;
+        public string SortDirection { get; set; } = "asc";
 
     }
 }

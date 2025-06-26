@@ -1,23 +1,33 @@
+using AutoMapper;
 using JobBoard.Application.DTOs;
 using JobBoard.Application.Interfaces.Services;
 using JobBoard.Application.Interfaces.Repositories;
 using JobBoard.Domain.Entity;
+using JobBoard.Application.Exceptions;
 
 namespace JobBoard.Infrastructure.Services;
 
 public class CompanyService : ICompanyService
 {
     private readonly ICompanyRepository _repository;
-
-    public CompanyService(ICompanyRepository repository)
+    private readonly IMapper _mapper;
+    public CompanyService(ICompanyRepository repository, IMapper mapper)
     {
+        _mapper = mapper;
         _repository = repository;
     }
 
-    public async Task<IEnumerable<CompanyDto>> GetAllAsync(CompanyFilterDto request)
+    public async Task<PageResponse<CompanyDto>> GetAllAsync(CompanyFilterDto request)
     {
-        var companies = await _repository.GetAllAsync(request);
-        return companies.Select(MapToDto);
+        var page = await _repository.GetAllAsync(request);
+        return new PageResponse<CompanyDto>
+        {
+            TotalElements = page.TotalElements,
+            CurrentPage = page.CurrentPage,
+            TotalPages = page.TotalPages,
+            PageSize = page.PageSize,
+            Items = page.Items.Select(MapToDto)
+        };
     }
 
     public async Task<CompanyDto?> GetByIdAsync(Guid id)
@@ -44,7 +54,8 @@ public class CompanyService : ICompanyService
     public async Task<bool> UpdateAsync(Guid id, UpdateCompanyDto dto)
     {
         var company = await _repository.GetByIdAsync(id);
-        if (company == null) return false;
+        if (company == null) 
+            throw new NotFoundException($"Company with ID {id} not found.");
         company.Name = dto.Name;
         company.Code = dto.Code;
         company.Website = dto.Website;
@@ -58,13 +69,8 @@ public class CompanyService : ICompanyService
         return await _repository.DeleteAsync(id);
     }
 
-    private static CompanyDto MapToDto(Company company) => new CompanyDto
+    private CompanyDto MapToDto(Company company)
     {
-        Id = company.Id,
-        Name = company.Name,
-        Code = company.Code,
-        Website = company.Website,
-        Email = company.Email,
-        Address = company.Address
-    };
+       return _mapper.Map<CompanyDto>(company);
+    }
 }

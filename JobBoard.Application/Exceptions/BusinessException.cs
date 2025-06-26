@@ -1,6 +1,6 @@
 using System;
 
-namespace JobBoard.API.Exceptions;
+namespace JobBoard.Application.Exceptions;
 
 public class BusinessException : Exception
 {
