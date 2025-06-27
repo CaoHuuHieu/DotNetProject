@@ -1,9 +1,5 @@
-using Microsoft.AspNetCore.Diagnostics;       
-using Microsoft.AspNetCore.Http;              
-using Microsoft.AspNetCore.Mvc;              
-using Microsoft.Extensions.Logging;         
-using System.Threading;                      
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using JobBoard.Application.Exceptions;
 
 namespace JobBoard.API.Exceptions.Handlers;
@@ -26,8 +22,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         var code = exception switch
         {
-            NotFoundException => StatusCodes.Status404NotFound,
-            BusinessException => StatusCodes.Status400BadRequest,
+            BusinessException be => be.Code,
             _ => StatusCodes.Status500InternalServerError
         };
 

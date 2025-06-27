@@ -1,11 +1,12 @@
 using JobBoard.Application.DTOs;
 using JobBoard.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobBoard.API.Controllers;
 
 [ApiController]
-[Route("api/companies")]
+[Route("api/v1/companies")]
 public class CompanyController : ControllerBase
 {
     private readonly ICompanyService _companyService;
@@ -22,6 +23,7 @@ public class CompanyController : ControllerBase
         return Ok(companies);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<CompanyDto>> GetCompany(Guid id)
     {
@@ -35,7 +37,7 @@ public class CompanyController : ControllerBase
     public async Task<ActionResult<CompanyDto>> CreateCompany(CreateCompanyDto dto)
     {
         var created = await _companyService.CreateAsync(dto);
-        return CreatedAtAction(nameof(GetCompany), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(GetCompany), created);
     }
 
     [HttpPut("{id}")]
@@ -44,16 +46,16 @@ public class CompanyController : ControllerBase
         var updated = await _companyService.UpdateAsync(id, dto);
         if (!updated)
             return NotFound();
-        return NoContent();
+        return Ok(updated);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCompany(Guid id)
     {
         var deleted = await _companyService.DeleteAsync(id);
-        if (!deleted)
+        if(!deleted)
             return NotFound();
-        return NoContent();
+        return Ok(new{Id = id});
     }
 }
 

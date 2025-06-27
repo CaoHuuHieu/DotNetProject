@@ -4,11 +4,11 @@ namespace JobBoard.Application.Exceptions;
 
 public class BusinessException : Exception
 {
-    public BusinessException(string message) : base(message)
+    public required int Code { get; set; }
+    
+    public BusinessException(int code, string message) : base(message)
     {
-    }
-    public BusinessException(string message, Exception innerException) : base(message, innerException)
-    {
+        Code = code;
     }
   
 }

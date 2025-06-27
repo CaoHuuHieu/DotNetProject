@@ -54,8 +54,8 @@ public class CompanyService : ICompanyService
     public async Task<bool> UpdateAsync(Guid id, UpdateCompanyDto dto)
     {
         var company = await _repository.GetByIdAsync(id);
-        if (company == null) 
-            throw new NotFoundException($"Company with ID {id} not found.");
+        if (company == null)
+            return false;
         company.Name = dto.Name;
         company.Code = dto.Code;
         company.Website = dto.Website;
