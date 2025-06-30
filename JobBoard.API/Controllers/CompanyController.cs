@@ -23,9 +23,8 @@ public class CompanyController : ControllerBase
         return Ok(companies);
     }
 
-    [Authorize]
     [HttpGet("{id}")]
-    public async Task<ActionResult<CompanyDto>> GetCompany(Guid id)
+    public async Task<ActionResult<CompanyDto>> GetCompany(string id)
     {
         var company = await _companyService.GetByIdAsync(id);
         if (company == null)
@@ -41,7 +40,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCompany(Guid id, UpdateCompanyDto dto)
+    public async Task<IActionResult> UpdateCompany(string id, UpdateCompanyDto dto)
     {
         var updated = await _companyService.UpdateAsync(id, dto);
         if (!updated)
@@ -50,7 +49,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCompany(Guid id)
+    public async Task<IActionResult> DeleteCompany(string id)
     {
         var deleted = await _companyService.DeleteAsync(id);
         if(!deleted)

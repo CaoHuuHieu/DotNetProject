@@ -26,7 +26,7 @@ public class CompanyRepository(JobBoardDbContext context) : AbstractRepository<C
         return await ToPagedResultAsync(query, request);
     }
 
-    public async Task<Company?> GetByIdAsync(Guid id)
+    public async Task<Company?> GetByIdAsync(string id)
     {
         return await context.Companies.FindAsync(id);
     }
@@ -44,7 +44,7 @@ public class CompanyRepository(JobBoardDbContext context) : AbstractRepository<C
         return await context.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(string id)
     {
         var company = await context.Companies.FindAsync(id);
         if (company == null) return false;

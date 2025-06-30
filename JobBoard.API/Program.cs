@@ -12,10 +12,12 @@ using JobBoard.Infrastructure.Sercurity;
 using JobBoard.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
+var _config = builder.Configuration;
 
 //Config Logger
 Log.Logger = new LoggerConfiguration()
@@ -51,6 +53,8 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
+
+
 // Add Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -73,6 +77,16 @@ builder.Services.AddDbContext<JobBoardDbContext>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddSingleton<IMongoDatabase>(cf =>
+{
+    var client = new MongoClient(_config["MongoDB:ConnectionString"]);
+    return client.GetDatabase(_config["MongoDB:Database"]);
+});
+
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+    
 var app = builder.Build();
 
 

@@ -3,7 +3,6 @@ using JobBoard.Application.DTOs;
 using JobBoard.Application.Interfaces.Services;
 using JobBoard.Application.Interfaces.Repositories;
 using JobBoard.Domain.Entity;
-using JobBoard.Application.Exceptions;
 
 namespace JobBoard.Infrastructure.Services;
 
@@ -30,7 +29,7 @@ public class CompanyService : ICompanyService
         };
     }
 
-    public async Task<CompanyDto?> GetByIdAsync(Guid id)
+    public async Task<CompanyDto?> GetByIdAsync(string id)
     {
         var company = await _repository.GetByIdAsync(id);
         return company == null ? null : MapToDto(company);
@@ -40,7 +39,7 @@ public class CompanyService : ICompanyService
     {
         var company = new Company
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             Name = dto.Name,
             Code = dto.Code,
             Website = dto.Website,
@@ -51,7 +50,7 @@ public class CompanyService : ICompanyService
         return MapToDto(created);
     }
 
-    public async Task<bool> UpdateAsync(Guid id, UpdateCompanyDto dto)
+    public async Task<bool> UpdateAsync(string id, UpdateCompanyDto dto)
     {
         var company = await _repository.GetByIdAsync(id);
         if (company == null)
@@ -64,7 +63,7 @@ public class CompanyService : ICompanyService
         return await _repository.UpdateAsync(company);
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(string id)
     {
         return await _repository.DeleteAsync(id);
     }

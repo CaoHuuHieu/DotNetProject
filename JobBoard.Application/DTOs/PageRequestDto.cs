@@ -10,4 +10,9 @@ namespace JobBoard.Application.DTOs
         public string SortDirection { get; set; } = "asc";
 
     }
+
+    public class AdminRequestDto : PageRequestDto
+    {
+        public bool? Active { get; set; }
+    }
 }

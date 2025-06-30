@@ -6,7 +6,7 @@ using System;
 
 public class PageResponse<T>
 {
-    public int TotalElements { get; set; }
+    public long TotalElements { get; set; }
     public int CurrentPage { get; set; }    
     
     public int TotalPages { get; set; }
