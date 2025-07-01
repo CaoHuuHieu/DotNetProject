@@ -1,12 +1,11 @@
 
 using System.Text;
+using JobBoard.API.Controllers.Handlers;
 using JobBoard.Infrastructure.Persistence;
 using JobBoard.Application.Mappers;
 using JobBoard.Application.Interfaces.Services;
 using JobBoard.Application.Interfaces.Repositories;
 
-using JobBoard.API.Exceptions.Handlers;
-using JobBoard.Infrastructure.Authentication;
 using JobBoard.Infrastructure.Repositories;
 using JobBoard.Infrastructure.Sercurity;
 using JobBoard.Infrastructure.Services;

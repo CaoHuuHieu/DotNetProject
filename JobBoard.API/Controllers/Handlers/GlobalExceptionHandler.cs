@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using JobBoard.Application.Exceptions;
 
-namespace JobBoard.API.Exceptions.Handlers;
+namespace JobBoard.API.Controllers.Handlers;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
@@ -20,19 +20,21 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
-        var code = exception switch
+        var problemDetails = exception switch
         {
-            BusinessException be => be.Code,
-            _ => StatusCodes.Status500InternalServerError
+            BusinessException businessException => new ProblemDetails
+            {
+                Status = businessException.Code,
+                Title = businessException.Message,
+            },
+            _ => new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Something went wrong!",
+            }
         };
 
-        var problemDetails = new ProblemDetails
-        {
-            Status = code,
-            Title = exception.Message,
-        };
-
-        httpContext.Response.StatusCode = code;
+        httpContext.Response.StatusCode = problemDetails.Status!.Value;
 
         await httpContext.Response
             .WriteAsJsonAsync(problemDetails, cancellationToken);
