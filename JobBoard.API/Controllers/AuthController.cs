@@ -1,6 +1,7 @@
+using JobBoard.Application.DTOs;
 using JobBoard.Application.Interfaces.Services;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using LoginRequest = JobBoard.Application.DTOs.LoginRequest;
 
 namespace JobBoard.API.Controllers;
 
@@ -16,10 +17,17 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
     
-    [HttpPost("login")]
-    public ActionResult<string> Login()
+    [HttpPost("set-password")]
+    public async Task<ActionResult<TokenResponse>> SetPassword([FromBody] LoginRequest request)
     {
-        return _authService.GenerateJwtTokenAsync();
+        await _authService.SetPassword(request);
+        return Ok();
+    }
+    
+    [HttpPost("login")]
+    public async Task<ActionResult<TokenResponse>> Login([FromBody] LoginRequest request)
+    {
+        return Ok(await _authService.GenerateJwtTokenAsync(request));
     }
     
 }

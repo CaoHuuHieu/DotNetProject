@@ -40,6 +40,10 @@ public class AdminRepository : MongoAbstractRepository<Admin>,  IAdminRepository
         return await ToPagedResultAsync(_adminCollection, filter, request);
     }
     
+    public async Task<Admin?> GetAdminByEmailAsync(string email)
+    {
+        return await _adminCollection.Find(a => a.Email == email).FirstOrDefaultAsync();
+    }
 
     public async Task<Admin?> GetAdminByIdAsync(string id)
     {

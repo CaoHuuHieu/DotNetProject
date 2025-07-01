@@ -8,8 +8,10 @@ public class Admin : BaseEntity
     public required string Email { get; set; }
     
     // public required Role Role { get; set; }
+
+    public bool Active { get; set; } = false;
     
-    public required bool Active { get; set; }
+    public string Password { get; set; } = string.Empty;
     
     public string? CompanyId { get; set; }
 }

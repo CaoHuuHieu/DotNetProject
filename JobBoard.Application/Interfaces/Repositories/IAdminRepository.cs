@@ -12,5 +12,8 @@ public interface IAdminRepository
     Task CreateAdminAsync(Admin user);
 
     Task UpdateAdminAsync(string id, Admin user);
+    
     Task DeleteAdminAsync(string id);
+    
+    Task<Admin?> GetAdminByEmailAsync(string requestUsername);
 }

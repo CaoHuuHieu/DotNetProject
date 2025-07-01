@@ -1,37 +1,33 @@
-
-using System.Text;
+using JobBoard.API.Config;
 using JobBoard.API.Controllers.Handlers;
 using JobBoard.Infrastructure.Persistence;
 using JobBoard.Application.Mappers;
 using JobBoard.Application.Interfaces.Services;
 using JobBoard.Application.Interfaces.Repositories;
-
+using JobBoard.Infrastructure.Config;
 using JobBoard.Infrastructure.Repositories;
-using JobBoard.Infrastructure.Sercurity;
 using JobBoard.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
-var _config = builder.Configuration;
+var config = builder.Configuration;
 
 //Config Logger
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File(builder.Configuration["Logging:FileLocation"] ?? "logs/app.log", rollingInterval: RollingInterval.Day)
+    .WriteTo.File(builder.Configuration["Logging:FileLocation"]!, rollingInterval: RollingInterval.Day)
     .Enrich.FromLogContext()
     .CreateLogger();
 
 builder.Host.UseSerilog();
 
 //Config Swagger
-builder.Services.AddOpenApiDocument(config =>
+builder.Services.AddOpenApiDocument(openApiConfig =>
 {   
-    config.Title = "JobBoard API";
-    config.AddSecurity("JWT", Enumerable.Empty<string>(), new NSwag.OpenApiSecurityScheme
+    openApiConfig.Title = "JobBoard API";
+    openApiConfig.AddSecurity("JWT", Enumerable.Empty<string>(), new NSwag.OpenApiSecurityScheme
     {
         Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
         Name = "Authorization",
@@ -39,7 +35,7 @@ builder.Services.AddOpenApiDocument(config =>
         Description = "Type into the textbox: Bearer {your JWT token}."
     });
     
-    config.OperationProcessors.Add(
+    openApiConfig.OperationProcessors.Add(
         new NSwag.Generation.Processors.Security.AspNetCoreOperationSecurityScopeProcessor("JWT"));
 });
 
@@ -54,37 +50,27 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 
 
 
-// Add Authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "yourdomain.com",
-            ValidAudience = "yourdomain.com",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("a-string-secret-at-least-256-bits-long"))
-        };
-    });
+// Config Authentication using Method extension
+builder.Services.AddJwtAuthentication(config);
+
 builder.Services.AddAuthorization();
 //Add db configuration
 builder.Services.AddDbContext<JobBoardDbContext>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
 builder.Services.AddScoped<ICompanyService, CompanyService>();
-builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddSingleton<IMongoDatabase>(cf =>
 {
-    var client = new MongoClient(_config["MongoDB:ConnectionString"]);
-    return client.GetDatabase(_config["MongoDB:Database"]);
+    var client = new MongoClient(config["MongoDB:ConnectionString"]);
+    return client.GetDatabase(config["MongoDB:Database"]);
 });
 
-builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-builder.Services.AddScoped<IAdminService, AdminService>();
+
+
     
 var app = builder.Build();
 

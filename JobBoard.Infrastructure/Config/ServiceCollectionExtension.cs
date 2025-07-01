@@ -1,11 +1,11 @@
 using System.Text;
-using JobBoard.Infrastructure.Sercurity;
+using JobBoard.API.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace JobBoard.Infrastructure.Authentication;
+namespace JobBoard.Infrastructure.Config;
 
 public static class ServiceCollectionExtensions
 {
@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = jwtSettings.Issuer,
+                    ValidIssuer = jwtSettings!.Issuer,
 
                     ValidateAudience = true,
                     ValidAudience = jwtSettings.Audience,
