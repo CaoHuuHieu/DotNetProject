@@ -54,6 +54,7 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.AddJwtAuthentication(config);
 
 builder.Services.AddAuthorization();
+
 //Add db configuration
 builder.Services.AddDbContext<JobBoardDbContext>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
@@ -63,13 +64,11 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddSingleton<IMongoDatabase>(cf =>
+builder.Services.AddScoped<IMongoDatabase>(cf =>
 {
     var client = new MongoClient(config["MongoDB:ConnectionString"]);
     return client.GetDatabase(config["MongoDB:Database"]);
 });
-
-
 
     
 var app = builder.Build();

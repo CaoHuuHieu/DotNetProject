@@ -25,10 +25,9 @@ public class AdminCreateDto
     public required string Name { get; set; }
     
     [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Email is invalid")]
     public required string Email { get; set; }
-
-    [Required(ErrorMessage = "Active is required")]
-    public required bool Active { get; set; }
+    
     
     [Required(ErrorMessage = "CompanyId is required")]
     public required string CompanyId {  get; set; }
@@ -43,6 +42,7 @@ public class AdminUpdateDto
     public required string Name { get; set; }
     
     [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Email is invalid")]
     public required string Email { get; set; }
 
     [Required(ErrorMessage = "Active is required")]
