@@ -5,6 +5,8 @@
 *.user
 *.suo
 
+
+
 # Rider
 .idea/
 
@@ -20,3 +22,6 @@ Thumbs.db
 
 # User secrets
 secrets.json
+
+# Ignore development appsettings
+JobBoard.API/appsettings.Development.json
