@@ -1,3 +1,6 @@
+using System.Net;
+using Grpc.Net.Client;
+using GrpcCompany;
 using JobBoard.API.Config;
 using JobBoard.API.Controllers.Handlers;
 using JobBoard.Infrastructure.Persistence;
@@ -9,6 +12,7 @@ using JobBoard.Infrastructure.Repositories;
 using JobBoard.Infrastructure.Services;
 using MongoDB.Driver;
 using Serilog;
+using CompanyService = JobBoard.Infrastructure.Services.CompanyService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -82,7 +86,26 @@ app.UseSwaggerUi();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
+app.MapGet("/testGrpc/{id}", async (string id) =>
+{
+    var httpHandler = new SocketsHttpHandler
+    {
+        EnableMultipleHttp2Connections = true
+    };
+    httpHandler.SslOptions = null;
+    httpHandler.AllowAutoRedirect = true;
+    httpHandler.AutomaticDecompression = DecompressionMethods.All;
 
+    var channel = GrpcChannel.ForAddress("http://localhost:5001", new GrpcChannelOptions
+    {
+        HttpHandler = httpHandler
+    });
+
+    var client = new GrpcCompany.CompanyService.CompanyServiceClient(channel);
+    var reply = await client.GetCompanyAsync(new CompanyRequest { Id = id });
+    Console.WriteLine($"gRPC call with id: {reply}");
+    return Results.Ok(reply);
+});
 app.MapControllers();
 
 app.Run();

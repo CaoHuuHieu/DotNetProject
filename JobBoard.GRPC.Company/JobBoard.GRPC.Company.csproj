@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\JobBoard.GRPC.Shared\Protos\company.proto" GrpcServices="Server" />
+    <ProjectReference Include="..\JobBoard.GRPC.Shared\JobBoard.GRPC.Shared.csproj" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JobBoard.Application\JobBoard.Application.csproj" />
+    <ProjectReference Include="..\JobBoard.Infrastructure\JobBoard.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

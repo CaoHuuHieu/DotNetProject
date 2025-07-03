@@ -48,7 +48,6 @@ public class AdminService : IAdminService
             Id = Guid.NewGuid().ToString(),
             Name = request.Name,
             Email = request.Email,
-            Active = request.Active,
             CompanyId = request.CompanyId
         };
         await _adminRepository.CreateAdminAsync(admin);
